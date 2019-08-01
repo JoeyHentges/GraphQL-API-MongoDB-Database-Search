@@ -77,7 +77,6 @@ module.exports = [
     model: 'Admin',
     database: 'db1',
     variables: [
-      // [variableName, variableType]
       ['username', 'String'],
       ['ofAge', 'Boolean'],
       ['age', 'Int'],
