@@ -1,15 +1,6 @@
 # GraphQL-API-MongoDB-Database-Search
 Quickly integrate a search feature to your app. Search for different values in your database.
 
-## Features
-* [x] User Sign-Up
-* [x] User Sign-In
-* [x] User Deletion
-* [x] User Update
-* [x] User Get
-* [x] Account Verification
-* [x] Password Reseting
-
 **Tools**
 * [x] **[Node.JS](https://nodejs.org)** v10.x.x
 * [x] **[Express](https://github.com/expressjs/express)**
