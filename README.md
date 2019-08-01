@@ -1,6 +1,13 @@
 # GraphQL-API-MongoDB-Database-Search
 Quickly integrate a search feature to your app. Search for different values in your database.
 
+**Features**
+* [x] String - any document with the search value in it.
+* [x] Int - any document that has a variable that matches search value.
+* [x] Float - any document that has a variable that matches search value.
+* [x] Boolean - any document that has a variable that matches search value.
+
+
 **Tools**
 * [x] **[Node.JS](https://nodejs.org)** v10.x.x
 * [x] **[Express](https://github.com/expressjs/express)**
@@ -81,6 +88,7 @@ module.exports = [
 ```
 
 Start up the server and make a 'GET' request to it.
+
 An example of the call using [Superagent](https://www.npmjs.com/package/superagent):
 ```txt
 const result = await superagent.get('${process.env.API_URL}/search')
@@ -88,4 +96,55 @@ const result = await superagent.get('${process.env.API_URL}/search')
     key: process.env.API_KEY,
     search: req.body.searchInput
   }).then(response => response.body);
+```
+
+Example API Response:
+```txt
+[
+  { 
+    model: 'Company',
+    variable: 'name',
+    type: 'String',
+    value: [
+      {
+        name: 'CompanyName',
+        id: 'DocObjectId'
+      },
+      {
+        name: 'CompanyName',
+        id: 'DocObjectId'
+      },
+    ] 
+  },
+  { 
+    model: 'Admin',
+    variable: 'username',
+    type: 'String',
+    value: [
+      {
+        username: 'AdminUsername',
+        id: 'DocObjectId'
+      },
+      {
+        username: 'AdminUsername',
+        id: 'DocObjectId'
+      },
+    ]
+  },
+  { 
+    model: 'Admin',
+    variable: 'firstName',
+    type: 'String',
+    value: [
+      {
+        firstName: 'AdminFirstName',
+        id: 'DocObjectId'
+      },
+      {
+        firstName: 'AdminFirstName',
+        id: 'DocObjectId'
+      },
+    ]
+  }
+]
 ```
