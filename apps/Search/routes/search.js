@@ -27,12 +27,15 @@ searchItems= async (body, res) => {
     }
 
     // check of the result is null - if it is not, push it onto the array
-    if (searchResult[querys[i].query][0] !== undefined) {
-      result.push({
-        model: querys[i].model,
-        variable: querys[i].value,
-        value: searchResult[querys[i].query]
-      });
+    if (searchResult !== undefined) {
+      if (searchResult[querys[i].query][0] !== undefined) {
+        result.push({
+          model: querys[i].model,
+          variable: querys[i].value,
+          type: querys[i].type,
+          value: searchResult[querys[i].query]
+        });
+      }
     }
   }
 
