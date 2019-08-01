@@ -13,7 +13,7 @@ module.exports = [
       ['username', 'String'],
       ['firstName', 'String'],
       ['lastName', 'String'],
-      ['num', 'Boolean']
+      ['num', 'Float']
     ]
   },
   {

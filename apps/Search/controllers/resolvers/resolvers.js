@@ -18,7 +18,7 @@ const getModel = (query) => {
 
 for (let i = 0; i < querys.length; i += 1) {
   if (querys[i].type === 'Int' || querys[i].type === 'Float') {
-    resolvers.Query[querys[i].query] = (searched) => getModel(querys[i]).find({ [querys[i].value]: Number(searched[querys[i].value]) });
+    resolvers.Query[querys[i].query] = (searched) => getModel(querys[i]).find({ [querys[i].value]: searched[querys[i].value] });
   } else if (querys[i].type === 'Boolean') {
     resolvers.Query[querys[i].query] = (searched) => getModel(querys[i]).find({ [querys[i].value]: searched[querys[i].value] });
   } else {
