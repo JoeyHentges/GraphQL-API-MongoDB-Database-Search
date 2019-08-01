@@ -1,6 +1,6 @@
 const { graphql } = require('graphql');
 const express = require('express');
-const { checkKey, checkQuery } = require('../../tools');
+const { checkKey } = require('../../tools');
 const { resolvers } = require('../controllers/resolvers/resolvers');
 const { typedefs, querys } = require('../controllers/typeDefs/typedefs');
 
