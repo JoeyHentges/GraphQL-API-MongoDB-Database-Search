@@ -5,6 +5,20 @@ let getTypes;
 let getVariables;
 let getQuerys;
 
+module.exports.typedefsFunction = (searchSchema) => {
+  const types = getTypes(searchSchema);
+  const { str, querys } = getQuerys(searchSchema);
+
+  const defs = `
+  scalar Date
+  scalar JSON
+  ${types}
+  ${str}
+`;
+
+  return { typedefs: buildSchema(`${defs}`), querys };
+}
+
 // set up the type schema for each model
 getTypes = (searchSchema) => {
   let str = '';
@@ -57,16 +71,3 @@ getQuerys = (searchSchema) => {
     }`;
   return { str, querys} ;
 }
-
-const types = getTypes(searchSchema);
-const { str, querys } = getQuerys(searchSchema);
-
-const defs = `
-    scalar Date
-    scalar JSON
-    ${types}
-    ${str}
-`;
-
-module.exports.typedefs = buildSchema(`${defs}`);
-module.exports.querys = querys;

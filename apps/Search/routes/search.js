@@ -1,8 +1,10 @@
+const mongoose = require('mongoose');
 const { graphql } = require('graphql');
 const express = require('express');
 const { checkKey } = require('../../tools');
-const { resolvers } = require('../controllers/resolvers/resolvers');
-const { typedefs, querys } = require('../controllers/typeDefs/typedefs');
+const { modelsArray } = require('../models/models');
+const { typedefsFunction } = require('../controllers/typeDefs/typedefs');
+const { resolversFunction } = require('../controllers/resolvers/resolvers');
 
 const router = express.Router();
 
@@ -11,7 +13,13 @@ let searchItems;
 router.get('/', checkKey, async (req, res) => searchItems(req.body, res));
 
 // Get the User by its ID
-searchItems= async (body, res) => {
+searchItems = async (body, res) => {
+  const { dbs, dbConfig, searchSchema } = require('../../configs');
+
+  const models = await modelsArray(await dbs(dbConfig), searchSchema);
+  const { typedefs, querys } = typedefsFunction(searchSchema);
+  const resolvers = resolversFunction(models, querys);
+
   const result = [];
   for (let i = 0; i < querys.length; i += 1) {
     // get the search result for a query
@@ -38,6 +46,9 @@ searchItems= async (body, res) => {
       }
     }
   }
+
+  // clear all models from mongoose
+  mongoose.models = {};
 
   res.send(result)
 };

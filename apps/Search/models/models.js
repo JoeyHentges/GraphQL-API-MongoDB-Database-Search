@@ -1,8 +1,7 @@
 const { Schema } = require('mongoose');
-const { dbs, searchSchema } = require('../../configs');
 
 // set of the schema for a specific model
-const getSchema = (variables) => {
+let getSchema = (variables) => {
   let str = '';
   for (let i = 0; i < variables.length; i += 1) {
     if (i === 0) {
@@ -21,20 +20,22 @@ const getSchema = (variables) => {
   return str;
 };
 
-// generate the model using the schema created above
-// then push the model onto the models array
-let modelsArray = [];
-for (let i = 0; i < searchSchema.length; i += 1) {
-  const schema = getSchema(searchSchema[i].variables);
-  const str =  `
-    {
-    ${schema}
-    }
-  `;
-  modelsArray.push({
-    model: dbs[searchSchema[i].database]().model(searchSchema[i].model, new Schema(JSON.parse(str))),
-    name: searchSchema[i].model
-  });
-};
+module.exports.modelsArray = (dbs, searchSchema) => {
+  // generate the model using the schema created above
+  // then push the model onto the models array
+  let modelsArray = [];
+  for (let i = 0; i < searchSchema.length; i += 1) {
+    const schema = getSchema(searchSchema[i].variables);
+    const str =  `
+      {
+      ${schema}
+      }
+    `;
 
-module.exports.modelsArray = modelsArray;
+    modelsArray.push({
+      model: dbs[searchSchema[i].database]().model(searchSchema[i].model, new Schema(JSON.parse(str))),
+      name: searchSchema[i].model
+    });
+  };
+  return modelsArray
+};
