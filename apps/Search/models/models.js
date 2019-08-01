@@ -1,6 +1,5 @@
 const { Schema } = require('mongoose');
-const { dbs } = require('../../configs');
-const searchSchema = require('../search-schema');
+const { dbs, searchSchema } = require('../../configs');
 
 // set of the schema for a specific model
 const getSchema = (variables) => {
@@ -9,7 +8,11 @@ const getSchema = (variables) => {
     if (i === 0) {
       str += `  `;
     }
-    str += `"${variables[i][0]}": "${variables[i][1]}"`;
+    let variableType = variables[i][1];
+    if (variableType === 'Int' || variableType === 'Float') {
+      variableType = 'Number';
+    }
+    str += `"${variables[i][0]}": "${variableType}"`;
     if (i !== variables.length - 1) {
       str += `,
       `;
@@ -29,7 +32,7 @@ for (let i = 0; i < searchSchema.length; i += 1) {
     }
   `;
   modelsArray.push({
-    model: dbs.db1().model(searchSchema[i].model, new Schema(JSON.parse(str))),
+    model: dbs[searchSchema[i].database]().model(searchSchema[i].model, new Schema(JSON.parse(str))),
     name: searchSchema[i].model
   });
 };

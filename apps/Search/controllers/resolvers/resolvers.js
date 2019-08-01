@@ -1,5 +1,4 @@
 const { modelsArray } = require('../../models/models');
-const searchSchema = require('../../search-schema');
 const { querys } = require('../typeDefs/typedefs');
 
 // resolves object
@@ -18,7 +17,13 @@ const getModel = (query) => {
 };
 
 for (let i = 0; i < querys.length; i += 1) {
-  resolvers.Query[querys[i].query] = (searched) => getModel(querys[i]).find({ [querys[i].value]: { "$regex": searched[querys[i].value], "$options": "i" } });
+  if (querys[i].type === 'Int' || querys[i].type === 'Float') {
+    resolvers.Query[querys[i].query] = (searched) => getModel(querys[i]).find({ [querys[i].value]: Number(searched[querys[i].value]) });
+  } else if (querys[i].type === 'Boolean') {
+    resolvers.Query[querys[i].query] = (searched) => getModel(querys[i]).find({ [querys[i].value]: searched[querys[i].value] });
+  } else {
+    resolvers.Query[querys[i].query] = (searched) => getModel(querys[i]).find({ [querys[i].value]: { "$regex": searched[querys[i].value], "$options": "i" } });
+  }
 }
 
 module.exports.resolvers = resolvers;

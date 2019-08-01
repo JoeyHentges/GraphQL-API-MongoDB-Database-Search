@@ -1,5 +1,5 @@
 const { buildSchema } = require('graphql');
-const searchSchema = require('../../search-schema');
+const { searchSchema } = require('../../../configs');
 
 let getTypes;
 let getVariables;
@@ -48,7 +48,9 @@ getQuerys = (searchSchema) => {
       querys.push({
         model: searchSchema[i].model,
         query: `get${searchSchema[i].model}By${searchSchema[i].variables[j][0]}`,
-        value: searchSchema[i].variables[j][0]});
+        value: searchSchema[i].variables[j][0],
+        type: searchSchema[i].variables[j][1]
+      });
     }
   }
   str += `

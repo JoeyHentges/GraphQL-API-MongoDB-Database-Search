@@ -15,10 +15,17 @@ searchItems= async (body, res) => {
   const result = [];
   for (let i = 0; i < querys.length; i += 1) {
     // get the search result for a query
-    const searchResult = await graphql(typedefs,
-      `{ ${querys[i].query}(${querys[i].value}: "${body.search}") { ${querys[i].value} id } }`,
+    let searchResult;
+    if (querys[i].type === 'Int' || querys[i].type === 'Float' || querys[i].type === 'Boolean') {
+      searchResult = await graphql(typedefs,
+      `{ ${querys[i].query}(${querys[i].value}: ${body.search}) { ${querys[i].value} id } }`,
       resolvers.Query).then(response => response.data);
-      
+    } else {
+      searchResult = await graphql(typedefs,
+        `{ ${querys[i].query}(${querys[i].value}: "${body.search}") { ${querys[i].value} id } }`,
+        resolvers.Query).then(response => response.data);
+    }
+
     // check of the result is null - if it is not, push it onto the array
     if (searchResult[querys[i].query][0] !== undefined) {
       result.push({
