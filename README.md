@@ -51,9 +51,9 @@ $ npm run cluster
 
 ### How to Use
 
-Update the .env file to change the API secret key, and add your database URL's and secret keys. Currently, out of the box, this app allows for 5 different databases, but you can easily change this by adding or removing them. 
+Change the .env.example file to .env, and update the API_KEY to something secure. The API_KEY is responsible for blocking bad requests. Then open the /main/config folder to configure the app.
 
-To add a database, go to the /main/configs/db folder and update the two files 'db_configs.js' and 'db_connection.js'. Follow the same structure of the current databases, and the app will recognize them.
+To add a database, go to the /main/configs/db folder and update the file 'db_configs.js'. Follow the same structure of the current databases, and the app will recognize them.
 
 The lastly, go to the /main/configs/searchSchema file and update the array the format shown. 
 Note: All variables searched must be on the surface document level. This does not search for elements within arrays or objects.
