@@ -1,5 +1,4 @@
 const { buildSchema } = require('graphql');
-const { searchSchema } = require('../../../configs');
 
 let getTypes;
 let getVariables;
@@ -17,14 +16,14 @@ module.exports.typedefsFunction = (searchSchema) => {
 `;
 
   return { typedefs: buildSchema(`${defs}`), querys };
-}
+};
 
 // set up the type schema for each model
 getTypes = (searchSchema) => {
   let str = '';
   for (let i = 0; i < searchSchema.length; i += 1) {
     const variables = getVariables(searchSchema[i].variables);
-    str +=  `
+    str += `
     type ${searchSchema[i].model} {
       id: ID
     ${variables}
@@ -39,7 +38,7 @@ getVariables = (variables) => {
   let str = '';
   for (let i = 0; i < variables.length; i += 1) {
     if (i === 0) {
-      str += `  `;
+      str += '  ';
     }
     str += `${variables[i][0]}: ${variables[i][1]}`;
     if (i !== variables.length - 1) {
@@ -48,26 +47,27 @@ getVariables = (variables) => {
     }
   }
   return str;
-}
+};
 
 // finally set up the query functions each model
 // only 1 per model
 getQuerys = (searchSchema) => {
   let str = 'type Query {';
-  let querys = [];
+  const querys = [];
   for (let i = 0; i < searchSchema.length; i += 1) {
-    for (let j = 0 ; j < searchSchema[i].variables.length; j += 1) {
-      str +=  `
+    for (let j = 0; j < searchSchema[i].variables.length; j += 1) {
+      str += `
         get${searchSchema[i].model}By${searchSchema[i].variables[j][0]}( ${searchSchema[i].variables[j][0]}: ${searchSchema[i].variables[j][1]}! ): [${searchSchema[i].model}]`;
       querys.push({
         model: searchSchema[i].model,
         query: `get${searchSchema[i].model}By${searchSchema[i].variables[j][0]}`,
         value: searchSchema[i].variables[j][0],
-        type: searchSchema[i].variables[j][1]
+        type: searchSchema[i].variables[j][1],
+        defaultReturns: searchSchema[i].defaultReturns.join(' ')
       });
     }
   }
   str += `
     }`;
-  return { str, querys} ;
-}
+  return { str, querys };
+};

@@ -1,10 +1,8 @@
+/* eslint-disable no-await-in-loop */
 const mongoose = require('mongoose');
 const { graphql } = require('graphql');
 const express = require('express');
 const { checkKey } = require('../../tools');
-const { modelsArray } = require('../models/models');
-const { typedefsFunction } = require('../controllers/typeDefs/typedefs');
-const { resolversFunction } = require('../controllers/resolvers/resolvers');
 
 const router = express.Router();
 
@@ -14,11 +12,9 @@ router.get('/', checkKey, async (req, res) => searchItems(req.body, res));
 
 // Get the User by its ID
 searchItems = async (body, res) => {
-  const { dbs, dbConfig, searchSchema } = require('../../configs');
-
-  const models = await modelsArray(await dbs(dbConfig), searchSchema);
-  const { typedefs, querys } = typedefsFunction(searchSchema);
-  const resolvers = resolversFunction(models, querys);
+  const {
+    typedefs, querys, resolvers
+  } = await require('../setup').requiredItems();
 
   const result = [];
   for (let i = 0; i < querys.length; i += 1) {
@@ -26,11 +22,11 @@ searchItems = async (body, res) => {
     let searchResult;
     if (querys[i].type === 'Int' || querys[i].type === 'Float' || querys[i].type === 'Boolean') {
       searchResult = await graphql(typedefs,
-      `{ ${querys[i].query}(${querys[i].value}: ${body.search}) { ${querys[i].value} id } }`,
-      resolvers.Query).then(response => response.data);
+        `{ ${querys[i].query}(${querys[i].value}: ${body.search}) { ${querys[i].value} id ${querys[i].defaultReturns} } }`,
+        resolvers.Query).then(response => response.data);
     } else {
       searchResult = await graphql(typedefs,
-        `{ ${querys[i].query}(${querys[i].value}: "${body.search}") { ${querys[i].value} id } }`,
+        `{ ${querys[i].query}(${querys[i].value}: "${body.search}") { ${querys[i].value} id ${querys[i].defaultReturns} } }`,
         resolvers.Query).then(response => response.data);
     }
 
@@ -50,7 +46,7 @@ searchItems = async (body, res) => {
   // clear all models from mongoose
   mongoose.models = {};
 
-  res.send(result)
+  res.send(result);
 };
 
 module.exports.routes = router;

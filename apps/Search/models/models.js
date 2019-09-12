@@ -1,11 +1,11 @@
 const { Schema } = require('mongoose');
 
 // set of the schema for a specific model
-let getSchema = (variables) => {
+const getSchema = (variables) => {
   let str = '';
   for (let i = 0; i < variables.length; i += 1) {
     if (i === 0) {
-      str += `  `;
+      str += '  ';
     }
     let variableType = variables[i][1];
     if (variableType === 'Int' || variableType === 'Float') {
@@ -23,19 +23,18 @@ let getSchema = (variables) => {
 module.exports.modelsArray = (dbs, searchSchema) => {
   // generate the model using the schema created above
   // then push the model onto the models array
-  let modelsArray = [];
+  const modelsArray = [];
   for (let i = 0; i < searchSchema.length; i += 1) {
     const schema = getSchema(searchSchema[i].variables);
-    const str =  `
+    const str = `
       {
       ${schema}
       }
     `;
-
     modelsArray.push({
       model: dbs[searchSchema[i].database]().model(searchSchema[i].model, new Schema(JSON.parse(str))),
       name: searchSchema[i].model
     });
-  };
-  return modelsArray
+  }
+  return modelsArray;
 };
